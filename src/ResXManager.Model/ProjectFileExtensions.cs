@@ -68,7 +68,9 @@ public static class ProjectFileExtensions
             if (!CultureHelper.IsValidCultureName(cultureName))
                 return CultureKey.Neutral;
 
-            return new CultureKey(cultureName);
+            var culture = cultureName.ToCulture();
+
+            return Equals(neutralResourcesLanguage, culture) ? CultureKey.Neutral : new CultureKey(culture);
         }
 
         if (Resw.Equals(extension, StringComparison.OrdinalIgnoreCase))

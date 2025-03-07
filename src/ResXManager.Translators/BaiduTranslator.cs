@@ -43,6 +43,7 @@ public class BaiduTranslator : TranslatorBase
         new CredentialItem("SecretKey", "Secret Key"),
         new CredentialItem("ApiUrl", "Api Url", false),
         new CredentialItem("Domain", "Domain", false),
+        new CredentialItem("Interval", "Request Interval (milliseconds)", false) { Value = "1000" },
     };
 
     public BaiduTranslator()
@@ -83,6 +84,16 @@ public class BaiduTranslator : TranslatorBase
     {
         get => Credentials[3].Value;
         set => Credentials[3].Value = value;
+    }
+
+    /// <summary>
+    /// Request interval in milliseconds
+    /// </summary>
+    [DataMember(Name = "Interval")]
+    public string? RequestInterval
+    {
+        get => Credentials[4].Value;
+        set => Credentials[4].Value = value;
     }
 
     private string? AppId => Credentials[0].Value;
@@ -167,6 +178,11 @@ public class BaiduTranslator : TranslatorBase
                         tuple.Item1.Results.Add(new TranslationMatch(this, tuple.Item2, Ranking));
                     }
                 }).ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(RequestInterval))
+                {
+                    await Task.Delay(int.Parse(RequestInterval, CultureInfo.InvariantCulture)).ConfigureAwait(false);
+                }
             }
         }
     }
